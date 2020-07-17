@@ -42,6 +42,7 @@ I use python3 and anki 2.1.22, tested it works. Don't hesitate to open an issue 
 * add a demo picture
 * make it optionnal to store the picture
 * allow to specify picture quality
+    * and grayscale or not, this could really make filesize go down
 * shell script that automate the pdftk + rename part
     * make it so that it uses only one folder for the whole thing
     * make it take the pdf as an argument
