@@ -94,7 +94,6 @@ n=len(paths)
 
 i=0
 for PDF_path in paths:
-    #if (i<1) :  #d debug
         PDF_path = str(PDF_path)
 
         i=i+1
@@ -115,5 +114,4 @@ for PDF_path in paths:
         # sends card into anki
         PNG_name = str(''.join([PDF_path[len(PDF_dir):],".png"]))
         sendPDFPageToAnki(PNG_name, PDF_text)
-        #print("sent!")
         print("\r\r")

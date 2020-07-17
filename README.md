@@ -24,7 +24,7 @@ I use python3 and anki 2.1.22, tested it works. Don't hesitate to open an issue 
         pdftk $file burst output ${name}_page%d.pdf
 
 ## Acknowledgment : 
-* shell script thanks to `Quentin Dupre`
+* shell script thanks to `Quentin Dupré`
 
 
 ## todo (most are very basic and quick, I mostly lack time so don't hesitate to help)
