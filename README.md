@@ -4,7 +4,7 @@ short version : load pdf into anki, page by page, with text included, planned OC
 
 
 ## how does it work / how to use?
-** * First read this page carefully. Please make sure you understand that right now anki's servers are free to use but they were not designed for thins kind of usage. PDFs like this can easily be millions of times heavier than simple text based cards. If you use this script be reasonnable and use another anki profile, this way it will not be automatically synced with the servers. Thank you.* **
+***First read this page carefully. Please make sure you understand that right now anki's servers are free to use but they were not designed for thins kind of usage. PDFs like this can easily be millions of times heavier than simple text based cards. If you use this script be reasonnable and use another anki profile, this way it will not be automatically synced with the servers. Thank you.***
 Use `pdftk` to *burst* a pdf into single pages, use rename to batch rename the pages, for example `rename 's/^pg_9/PDF_lesson_cryptography_/' pg_0*` then set up the "settings" section of pdf2anki (especially the directory where the pdf should be found) then launch the script : `python3 ./pdf2anki.py` or with `./pdf2anki.py` after making it executable.
 * It then uses `convert` to take the text from the pdf.
 * then manually moves the pdf pages into the media folder of anki
