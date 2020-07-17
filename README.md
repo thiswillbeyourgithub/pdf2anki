@@ -1,4 +1,4 @@
-# all help welcome, this is very functionnal but lots of things could be done to make it a thousand time better
+# all help welcome, this is very functionnal but lots of small things could be done to make it a thousand time better, check out the todolist
 # pdf2anki
 short version : load pdf into anki, page by page, with text included, planned OCR
 
@@ -12,7 +12,7 @@ Use `pdftk` to *burst* a pdf into single pages, use rename to batch rename the p
 * this allows to search pdfs using multiple words 
 
 ## requirements
-I use python3 and anki 2.1.22, tested it works. Don't hesitate to open an issue if this stops working.
+I use python3 and anki 2.1.22, tested it works. Don't hesitate to open an issue if this stops working. I tested this on ubuntu 18.04 and I expected
 * pdftk
 * convert
 * anki-connect (addon for anki)
@@ -21,6 +21,7 @@ I use python3 and anki 2.1.22, tested it works. Don't hesitate to open an issue 
 ## notes :
 * please don't use this on super large pdf for no reason, or if you do : don't sync it, the creator of anki should not have to pay extra bandwidth for this not intended use so don't forget the "delete media" button.
 * to automate the bursting of the file you can use the following :
+
         file=$1
         name=${file%%.pdf}
         pdftk $file burst output ${name}_page%d.pdf
@@ -31,15 +32,15 @@ I use python3 and anki 2.1.22, tested it works. Don't hesitate to open an issue 
 
 ## todo (most are very basic and quick, I mostly lack time so don't hesitate to help)
 * add a demo picture
+* make it optionnal to store the picture
+* allow to specify picture quality
 * shell script that automate the pdftk + rename part
     * make it so that it uses only one folder for the whole thing
     * make it take the pdf as an argument
 * **add OCR functionnality using cuneiform or something like that**
 * clean up the code, inspired by  by https://github.com/kryzar/Stupid-Serguei-Scripts/blob/master/Angif.sh
-* make it optionnal to store the picture
-* allow to specify picture quality
+    * also : use enumerate unstead of a stupid if
 * solve the css formating template (in the template window in anki, the css is not parsed correctly)
-* use enumerate unstead of a stupid if
 * add time to complete estimation
 * parallelize the whole thing : it should be much much faster : https://pymotw.com/2/multiprocessing/basics.html
     * maybe thanks to the map function : https://stackoverflow.com/questions/1704401/is-there-a-simple-process-based-parallel-map-for-python
