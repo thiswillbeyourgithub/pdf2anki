@@ -1,7 +1,7 @@
 import requests
 import subprocess
-from pathlib import Path
 import re
+from pathlib import Path
 
 # tested with python3 and anki 2.1.22
 # you need the addon anki-connect
@@ -13,18 +13,10 @@ import re
 # ex : rename 's/^pg_00/my_document_/' *.pdf
 
 
-# todo :
-# script that automatically uses pdftk and rename
-# use enumerate instead of a stupid if
-# add a time estimation
-# add ocr functionnality
-# add functions inspired by https://github.com/kryzar/Stupid-Serguei-Scripts/blob/master/Angif.sh
-# make it so that it does all this in the same folder
-# make it optionnal to store the picture
-# allow to choose picture quality
-# solve the css formating in the template
-# parallelize the whole thing : it could be much faster : https://pymotw.com/2/multiprocessing/basics.html
-        # maybe thanks to the map function : https://stackoverflow.com/questions/1704401/is-there-a-simple-process-based-parallel-map-for-python
+######### SETTINGS :
+# iterate over all pdfs, turn them into picture and extract text
+PDF_dir="/home/glume/Downloads/temp/"
+ankiMediaFolder="/home/glume/.local/share/Anki2/Main/collection.media/"
 
 
 def createBasicTemplate():
@@ -95,10 +87,6 @@ createBasicTemplate()
 print("Adding destination Deck...")
 createImportDeck()
 
-
-# iterate over all pdfs, turn them into picture and extract text
-PDF_dir="/home/glume/Downloads/temp/"
-ankiMediaFolder="/home/glume/.local/share/Anki2/Main/collection.media/"
 
 paths = Path(PDF_dir).glob('./*.pdf')
 paths=sorted(list(paths)) # otherwise it's this weird generator type thingie
