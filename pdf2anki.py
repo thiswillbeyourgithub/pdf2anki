@@ -23,6 +23,7 @@ import requests
 import subprocess
 import re
 from pathlib import Path
+from tqdm import tqdm
 
 # tested with python3 and anki 2.1.22
 # you need the addon anki-connect
@@ -111,15 +112,11 @@ createImportDeck()
 
 paths = Path(PDF_dir).glob('./*.pdf')
 paths=sorted(list(paths)) # otherwise it's this weird generator type thingie
-n=len(paths)
 
-i=0
-for PDF_path in paths:
+for i, PDF_path in enumerate(tqdm(paths)):
         PDF_path = str(PDF_path)
 
-        i=i+1
-        print("######################## Step : ",i,"/",n,,"  (",str(int(i)/int(n)*100) "%) #")
-        
+
 
         # convert pdf to png
         PNG_path = ankiMediaFolder + PDF_path[len(PDF_dir):] + ".png"
@@ -130,7 +127,7 @@ for PDF_path in paths:
 
         PDF_text = str(PDF_text)
         PDF_text = PDF_text.replace("\n","<br>") # tries to keep formatting in anki
-        PDF_text = PDF_text.replace(" ","&nbsp;") 
+        PDF_text = PDF_text.replace(" ","&nbsp;")
 
         # sends card into anki
         PNG_name = str(''.join([PDF_path[len(PDF_dir):],".png"]))
