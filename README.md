@@ -3,7 +3,7 @@ short version : load pdf into anki, page by page, with text included, planned OC
 
 
 ## how does it work?
-Use `pdftk` to *burst* a pdf into single pages, use rename to batch rename the pages, for example `rename 's/^pg_9/PDF_lesson_cryptography_/' pg_0*` then set up the "settings" section of pdf2anki (especially the directory where the pdf should be found) then launch the script : `python3 ./pdf2anki.py`
+Use `pdftk` to *burst* a pdf into single pages, use rename to batch rename the pages, for example `rename 's/^pg_9/PDF_lesson_cryptography_/' pg_0*` then set up the "settings" section of pdf2anki (especially the directory where the pdf should be found) then launch the script : `python3 ./pdf2anki.py` or with `./pdf2anki.py` after making it executable.
 * It then uses `convert` to take the text from the pdf.
 * then manually moves the pdf pages into the media folder of anki
 * Anki-connect addon is then used to send cards to anki that contains the single page + the text
@@ -18,6 +18,13 @@ I use python3 and anki 2.1.22, tested it works. Don't hesitate to open an issue 
 
 ## notes :
 * please don't use this on super large pdf for no reason, or if you do : don't sync it, the creator of anki should not have to pay extra bandwidth for this not intended use so don't forget the "delete media" button.
+* to automate the bursting of the file you can use the following :
+        file=$1
+        name=${file%%.pdf}
+        pdftk $file burst output ${name}_page%d.pdf
+
+## Acknowledgment : 
+* shell script thanks to `Quentin Dupre`
 
 
 ## todo (most are very basic and quick, I mostly lack time so don't hesitate to help)
