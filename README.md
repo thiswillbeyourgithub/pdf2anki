@@ -42,7 +42,7 @@ I use python3 and anki 2.1.22, tested it works. Don't hesitate to open an issue 
 * shell script that automate the pdftk + rename part
     * make it so that it uses only one folder for the whole thing
     * make it take the pdf as an argument
-* **add OCR functionnality using cuneiform or something like that**
+* **add OCR functionnality using PyTesseract or something like that**
 * clean up the code, inspired by  by https://github.com/kryzar/Stupid-Serguei-Scripts/blob/master/Angif.sh
     * also : use enumerate unstead of a stupid if
 * solve the css formating template (in the template window in anki, the css is not parsed correctly)
