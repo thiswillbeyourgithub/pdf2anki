@@ -100,7 +100,7 @@ def sendPDFPageToAnki(PNG_name, back):
             }
         }
     })
-    print(r.json())
+    tqdm.write(r.json())
 
 
 # Initialization
@@ -113,7 +113,7 @@ createImportDeck()
 paths = Path(PDF_dir).glob('./*.pdf')
 paths=sorted(list(paths)) # otherwise it's this weird generator type thingie
 
-for i, PDF_path in enumerate(tqdm(paths)):
+for PDF_path in tqdm(paths):
         PDF_path = str(PDF_path)
 
 
@@ -132,4 +132,4 @@ for i, PDF_path in enumerate(tqdm(paths)):
         # sends card into anki
         PNG_name = str(''.join([PDF_path[len(PDF_dir):],".png"]))
         sendPDFPageToAnki(PNG_name, PDF_text)
-        print("\r\r")
+        tqdm.write("\r\r")
