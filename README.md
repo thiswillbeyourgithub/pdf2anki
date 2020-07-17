@@ -21,6 +21,7 @@ I use python3 and anki 2.1.22, tested it works. Don't hesitate to open an issue 
 
 
 ## todo (most are very basic and quick, I mostly lack time so don't hesitate to help)
+* add a demo picture
 * shell script that automate the pdftk + rename part
     * make it so that it uses only one folder for the whole thing
     * make it take the pdf as an argument
