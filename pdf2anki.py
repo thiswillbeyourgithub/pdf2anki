@@ -15,8 +15,8 @@ from pathlib import Path
 
 ######### SETTINGS :
 # iterate over all pdfs, turn them into picture and extract text
-PDF_dir="/home/glume/Downloads/temp/"
-ankiMediaFolder="/home/glume/.local/share/Anki2/Main/collection.media/"
+PDF_dir="/home/$USER/Downloads/temp/"
+ankiMediaFolder="/home/$USER/.local/share/Anki2/Main/collection.media/"
 
 
 def createBasicTemplate():
