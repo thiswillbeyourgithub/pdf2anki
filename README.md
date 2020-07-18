@@ -53,4 +53,5 @@ I use python3 and anki 2.1.22, tested it works. Don't hesitate to open an issue 
 * add time to complete estimation
 * parallelize the whole thing : it should be much much faster : https://pymotw.com/2/multiprocessing/basics.html
     * maybe thanks to the map function : https://stackoverflow.com/questions/1704401/is-there-a-simple-process-based-parallel-map-for-python
+* when the technology is there : add OCR from written notes.
 
