@@ -39,6 +39,7 @@ I use python3 and anki 2.1.22, tested it works. Don't hesitate to open an issue 
 
 
 ## todo (most are very basic and quick, I mostly lack time so don't hesitate to help)
+* write a better howto
 * add a demo picture
 * make it optionnal to store the picture
 * allow to specify picture quality
