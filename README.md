@@ -41,6 +41,7 @@ I use python3 and anki 2.1.22, tested it works. Don't hesitate to open an issue 
 ## todo (most are very basic and quick, I mostly lack time so don't hesitate to help)
 * write a better howto
 * add a demo picture
+* stop using convert and use something like this instead that works on all OSs https://www.roytuts.com/convert-pdf-to-image-using-python/
 * make it optionnal to store the picture
 * allow to specify picture quality
     * and grayscale or not, this could really make filesize go down
