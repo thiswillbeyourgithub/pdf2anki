@@ -14,7 +14,7 @@ Use `pdftk` to *burst* a pdf into single pages, use rename to batch rename the p
 * this allows to search pdfs using multiple words 
 
 ## requirements
-I use python3 and anki 2.1.22, tested it works. Don't hesitate to open an issue if this stops working. I tested this on ubuntu 18.04 and I expected
+I use python3 and anki 2.1.22, tested it works. Don't hesitate to open an issue if this stops working. I tested this on ubuntu 18.04 but the code is not yet compatible on other OS, the code needs to be changed because for the moment you need the following executable :
 * pdftk
 * convert
 * anki-connect (addon for anki)
@@ -39,9 +39,9 @@ I use python3 and anki 2.1.22, tested it works. Don't hesitate to open an issue 
 
 
 ## todo (most are very basic and quick, I mostly lack time so don't hesitate to help)
+* stop using convert and pdftk and use something like this instead that works on all OSs https://www.roytuts.com/convert-pdf-to-image-using-python/ + https://github.com/adietz/PdfBurst/blob/master/burst.py
 * write a better howto
 * add a demo picture
-* stop using convert and pdftk and use something like this instead that works on all OSs https://www.roytuts.com/convert-pdf-to-image-using-python/ + https://github.com/adietz/PdfBurst/blob/master/burst.py
 * make it optionnal to store the picture
 * allow to specify picture quality
     * and grayscale or not, this could really make filesize go down
