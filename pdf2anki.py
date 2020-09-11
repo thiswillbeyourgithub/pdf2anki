@@ -25,20 +25,22 @@ import re
 from pathlib import Path
 from tqdm import tqdm
 
-# tested with python3 and anki 2.1.22
+# tested with python3 and anki 2.1.33
 # you need the addon anki-connect
 
 # use pdftk to burst a PDF into single pages like so :
 #   pdftk masterPDF.pdf burst
 # I recommend uding "rename" package to rename the individual pages
-# into something more legible, and this way the sort field contain some information like document name etc
-# ex : rename 's/^pg_00/my_document_/' *.pdf
+# into something more legible, and this way the sort field contain some information like document name etc :
+#   rename 's/^pg_00/my_document_/' *.pdf
+# don't forget to remove the large pdf from the folder to only import the single page pdf
 
 
 ######### SETTINGS :
 # iterate over all pdfs, turn them into picture and extract text
-PDF_dir="/home/$USER/Downloads/temp/"
-ankiMediaFolder="/home/$USER/.local/share/Anki2/Main/collection.media/"
+PDF_dir="/home/USERNAME/Downloads/temp/"
+ankiMediaFolder="/home/USERNAME/.local/share/Anki2/Main/collection.media/"
+######### 
 
 
 def createBasicTemplate():
@@ -47,7 +49,7 @@ def createBasicTemplate():
         "version": 6,
         "params": {
             "modelName": "PDF_per_page",
-            "modelType": "basic",
+            #"modelType": "basic",
             "inOrderFields": ["OnePage", "Text", "OCR"],
             "css":".card { font-family: arial; font-size: 14px; text-align: left; color: black; background-color: white; } \a\
                 .title { text-align : center !important; font-size : 30px} \a\
@@ -67,7 +69,9 @@ def createBasicTemplate():
             ]
         }
     })
-    print("Template created!")
+    #print(str(r.json())) # debug in case of error
+    print("Finished template creation!")
+    print("")
 
 
 def createImportDeck():
@@ -78,7 +82,8 @@ def createImportDeck():
             "deck": "Imported from PDF",
         }
     })
-    print("Deck created!")
+    print("Finished deck creation!")
+    print("")
 
 
 def sendPDFPageToAnki(PNG_name, back):
@@ -100,23 +105,23 @@ def sendPDFPageToAnki(PNG_name, back):
             }
         }
     })
-    tqdm.write(r.json())
+    tqdm.write(str(r.json()))
 
 
-# Initialization
+####### Initialization
 print("Adding Template...")
 createBasicTemplate()
 print("Adding destination Deck...")
 createImportDeck()
+####### 
 
 
+####### Main :
 paths = Path(PDF_dir).glob('./*.pdf')
-paths=sorted(list(paths)) # otherwise it's this weird generator type thingie
+paths = sorted(list(paths)) # otherwise it's this weird generator type thingie
 
 for PDF_path in tqdm(paths):
         PDF_path = str(PDF_path)
-
-
 
         # convert pdf to png
         PNG_path = ankiMediaFolder + PDF_path[len(PDF_dir):] + ".png"
@@ -132,4 +137,3 @@ for PDF_path in tqdm(paths):
         # sends card into anki
         PNG_name = str(''.join([PDF_path[len(PDF_dir):],".png"]))
         sendPDFPageToAnki(PNG_name, PDF_text)
-        tqdm.write("\r\r")
