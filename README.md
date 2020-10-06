@@ -35,6 +35,7 @@ You also need this anki addon :
 
 
 ## notes :
+* you will probably be interested in the addon [AnkiOCR](https://ankiweb.net/shared/info/450181164) as long as I have not gotten arround to implement OCR in this.
 * please don't use this on super large pdf for no reason, or if you do : don't sync it, the creator of anki should not have to pay extra bandwidth for this not intended use so don't forget the "delete media" button.
 * **why did I make this?** The idea was to make my PDF lessons searchable. I never found a way to look for a page in a pdf using several keywords at the same time. So I decided to import each page into anki and use it like that. The ocr part is just that sometimes there are pictures in the page and some data could be extracted by simply 'ocr'ing the page and adding it to a field.
 * you should install this addon [highlight search results in the browser](https://ankiweb.net/shared/info/225180905)
