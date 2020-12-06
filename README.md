@@ -20,7 +20,7 @@ short version : load pdf into anki, page by page, with text included, planned OC
 * remove the large pdf file to only keep the "single page" files
 * run `rename 's/^pg_0/My_TITLE_/' folder/path/pg.pdf`, this will be the header of your card
 * change the path in the script to what corresponds to your setup
-* run `python3 ./pdf2anki.py`
+* run `python3 ./pdf2anki.py` (or in my case `python3.6`)
 * if you have any issue, notify me by openning an issue on github. Try to uncomment the debug line to see the output `r.json()`.
 
 ## requirements
