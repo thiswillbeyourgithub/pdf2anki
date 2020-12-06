@@ -39,7 +39,7 @@ from tqdm import tqdm
 ######### SETTINGS :
 # iterate over all pdfs, turn them into picture and extract text
 PDF_dir="/home/USERNAME/Downloads/temp/"
-ankiMediaFolder="/home/USERNAME/.local/share/Anki2/Main/collection.media/"
+ankiMediaFolder="/home/USERNAME/.local/share/Anki2/PROFILE_NAME/collection.media/"
 ######### 
 
 
