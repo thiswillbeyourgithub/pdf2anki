@@ -49,8 +49,7 @@ def createBasicTemplate():
         "version": 6,
         "params": {
             "modelName": "PDF_per_page",
-            #"modelType": "basic",
-            "inOrderFields": ["OnePage", "Text", "OCR"],
+            "inOrderFields": ["OnePage", "Text"],
             "css":".card { font-family: arial; font-size: 14px; text-align: left; color: black; background-color: white; } \a\
                 .title { text-align : center !important; font-size : 30px} \a\
                 .col1 {width:50% ; float:left ; text-align:left}  \a\
@@ -64,7 +63,6 @@ def createBasicTemplate():
                                     <div class="col1"><u><b>Repeated page :</u></b> <br> {{OnePage}} <br>##<br>{{OnePage}}</div>\a\
                                     <div class="col2"><u><b>Text content :</u></b> {{Text}} </div> \a\
                             </div>'
-                    # OCR is not displayed as it is used only to find the card
                 }
             ]
         }
@@ -97,7 +95,6 @@ def sendPDFPageToAnki(PNG_name, back):
                 "fields": {
                     "OnePage": str(''.join(['<img class="" src="', PNG_name,'">'])),
                     "Text": back ,
-                    "OCR": "" # not yet used
                 },
                 "tags": [
                     "ImportedFromPDF"
