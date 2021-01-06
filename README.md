@@ -1,6 +1,6 @@
 # all help welcome, this is very functionnal but lots of small things could be done to make it a thousand time better, check out the todolist
 # pdf2anki
-short version : load pdf into anki, page by page, with text included, planned OCR
+*TLDR : load pdf into anki, page by page, with text included. It **doesn't** OCR text, it just copies the text from the pdf. If your PDF doesn't include text, check out [AnkiOCR](https://ankiweb.net/shared/info/450181164).*
 
 
 ## how does it work ?
@@ -35,16 +35,18 @@ You also need this anki addon :
 
 
 ## notes :
-* you will probably be interested in the addon [AnkiOCR](https://ankiweb.net/shared/info/450181164) as long as I have not gotten arround to implement OCR in this.
+* If you want to use it but your PDF doesn't include text and is not written by hand, you will probably be interested in the addon [AnkiOCR](https://ankiweb.net/shared/info/450181164). Just run it after importing your pdf using this script. It might take a long time so check its settings to use multithreading correctly.
 * please don't use this on super large pdf for no reason, or if you do : don't sync it, the creator of anki should not have to pay extra bandwidth for this not intended use so don't forget the "delete media" button.
 * **why did I make this?** The idea was to make my PDF lessons searchable. I never found a way to look for a page in a pdf using several keywords at the same time. So I decided to import each page into anki and use it like that. The ocr part is just that sometimes there are pictures in the page and some data could be extracted by simply 'ocr'ing the page and adding it to a field.
-* you should install this addon [highlight search results in the browser](https://ankiweb.net/shared/info/225180905)
+* you should consider installing this addon to find text more easily : [highlight search results in the browser](https://ankiweb.net/shared/info/225180905)
 * the way my code works, images are manually moved from the pdf folder to the anki media folder. I think anki-connect has a more elegant way of doing this but I didn't have the time to do it at the time. If you find a better way don't hesitate to do a PR. My method probably doesn't translate well to other OSs.
-* to automate the bursting of the file you can use the following :
+* to automate the bursting of the file you can use the following but don't forget that the number of cards added corresponds to the number of pages you have to add :
 
-        file=$1
-        name=${file%%.pdf}
-        pdftk $file burst output ${name}_page%d.pdf
+```
+file=$1
+name=${file%%.pdf}
+pdftk $file burst output ${name}_page%d.pdf
+```
 
 ## Acknowledgment : 
 * shell script thanks to `Quentin Dupré`
@@ -55,18 +57,13 @@ You also need this anki addon :
 * write a better howto
 * add a demo picture
 * check if a card has already been imported earlier in the loop 
-* make it optionnal to store the picture
+* make it optionnal to store the picture, the text could be enough and faster
 * allow to specify picture quality
     * and grayscale or not, this could really make filesize go down
-* shell script that automate the pdftk + rename part
-    * make it so that it uses only one folder for the whole thing
-    * make it take the pdf as an argument
-* **add OCR functionnality using PyTesseract or something like that**
 * clean up the code, inspired by  by https://github.com/kryzar/Stupid-Serguei-Scripts/blob/master/Angif.sh
     * also : use enumerate unstead of a stupid if
-* solve the css formating template (in the template window in anki, the css is not parsed correctly)
-* add time to complete estimation
 * parallelize the whole thing : it should be much much faster : https://pymotw.com/2/multiprocessing/basics.html
     * maybe thanks to the map function : https://stackoverflow.com/questions/1704401/is-there-a-simple-process-based-parallel-map-for-python
 * when the machine learning technology is there : add OCR from written notes.
+* solve the css formating template (in the template window in anki, the css is not parsed correctly)
 
