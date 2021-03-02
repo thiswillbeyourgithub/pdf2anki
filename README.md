@@ -13,6 +13,8 @@
 * you can then search pdfs pages using multiple words at the same time
 * picture :
 [pic](screenshot.jpg)
+* preview screen :
+[pic](preview.jpg)
 
 ## Guide
 * run `pip install -r requirements.txt`
@@ -34,5 +36,5 @@
 * the way my code works, images are manually moved from the pdf folder to the anki media folder. I think anki-connect has a more elegant way of doing this but I didn't have the time to do it at the time. If you find a better way don't hesitate to do a PR. My method probably doesn't translate well to other OSs.
 
 
-## todo (most are very basic and quick, I mostly lack time so don't hesitate to help)
-* *minor* solve the css formating template (in the template window in anki, the css is not parsed correctly)
+## TODO
+* NONE. All caught up!

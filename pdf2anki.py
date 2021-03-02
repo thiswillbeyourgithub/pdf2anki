@@ -51,16 +51,16 @@ if args['PDF'] is None :
 
 
 ######### SETTINGS :
-picture_DPI             =  200    #default  is  200
+picture_DPI             =  100    #default  is  200
 bw                      =  False  #store    as  black  and  white      or  not
 add_image               =  True   #default  is  True
 unix                    =  True   # on  unix,  use  pdftotext  to  preserve  layout,  otherwise  use  PyPDF2  but  text  extraction  is  worse
-disable_multithreading  =  False
+disable_multithreading  =  True
 
 anki_profile = "Main"
 ankiMediaFolder=f"/home/{args['username']}/.local/share/Anki2/{anki_profile}/collection.media/"
 
-num_cores = max(int(multiprocessing.cpu_count()/2), 1)
+num_cores = max(multiprocessing.cpu_count()-1, 1)
 batch_size = 50 # for pdf2image
 ######### 
 
@@ -70,19 +70,19 @@ def createBasicTemplate():
         "version": 6,
         "params": {
             "modelName": "PDF_per_page",
-            "inOrderFields": ["OnePage", "Text"],
-            "css":".card { font-family: arial; font-size: 14px; text-align: left; color: black; background-color: white; } \a\
-                .title { text-align : center !important; font-size : 30px} \a\
-                .col1 {width:50% ; float:left ; text-align:left}  \a\
-                .col2 {width:50% ; float:right ; text-align:left }  \a\
-                .container {width:100% ;  display:table }",
+            "inOrderFields": ["DocumentPage", "Text"],
+            "css":" .card {font-family: arial; font-size: 14px; text-align: left; color: black; background-color: white;}\n\
+                    .title {text-align : center !important; font-size : 30px} \n\
+                    .col1 {width:50% ; float:left ; text-align:left}\n\
+                    .col2 {width:50% ; float:right ; text-align:left}\n\
+                    .container {width:100% ;  display:table }\n",
             "cardTemplates": [
                 {
-                    "Front": "{{OnePage}}",
-                    "Back": '<div class="title">	Side by side comparison</div>\a\
-                            <div class = "container"> \a\
-                                    <div class="col1"><u><b>Repeated page :</u></b> <br> {{OnePage}} <br>##<br>{{OnePage}}</div>\a\
-                                    <div class="col2"><u><b>Text content :</u></b> {{Text}} </div> \a\
+                    "Front": "{{DocumentPage}}",
+                    "Back": '<div class="title"> Side by Side </div>\n\
+                            <div class = "container"> \n\
+                                    <div class="col1"><u><b>Repeated page :</u></b> <br><br> {{DocumentPage}} <br>##<br>{{DocumentPage}}</div>\n\
+                                    <div class="col2"><u><b>Text content :</u></b> <br><br> {{Text}} </div> \n\
                             </div>'
                 }
             ]
@@ -117,11 +117,11 @@ def sendToAnki(JPG_name, back):
                 "deckName": "Imported from PDF",
                 "modelName": "PDF_per_page",
                 "fields": {
-                    "OnePage": front,
+                    "DocumentPage": front,
                     "Text": back ,
                 },
                 "tags": [
-                    "ImportedFromPDF"
+                    "Imported_From_PDF"
                 ]
             }
         }
@@ -168,11 +168,13 @@ if add_image is True:
         run_p2i(x, y)
     else:
         try :
-            x=1 ; y=batch_size
-            while y < (length+batch_size+2): #just to make sure
-                run_p2i(x, y)
-                x = y 
-                y = min(length, y+batch_size)
+            x=1 ; y=batch_size ; z=0
+            while y <= length+batch_size:
+                print(f"Currently at page #{z*batch_size}... {x} {y} {z} {length}")
+                #run_p2i(x, min(y, length))
+                x = y
+                y += batch_size
+                z+=1
         except OSError as err:
             print(f"ERROR {err}")
             print("This usually happens to me because of multithreading over large files.")
@@ -197,10 +199,8 @@ for page in tqdm(PDF_file.pages):
             PDF_text = re.sub(r"\n+","<br>", PDF_text) 
             PDF_text = re.sub("<br>\s+<br>","<br>", PDF_text)
         if unix == True :
-            i = str(i)
-            PDF_text = subprocess.run(["pdftotext", "-f", i, "-l", i, "-layout","-nopgbrk","-enc","UTF-8",args['PDF'], "-"],stdout=subprocess.PIPE, encoding='utf-8')
+            PDF_text = subprocess.run(["pdftotext", "-f", str(i), "-l", str(i), "-layout","-nopgbrk","-enc","UTF-8",args['PDF'], "-"],stdout=subprocess.PIPE, encoding='utf-8')
             PDF_text = PDF_text.stdout.replace("\n","<br>")
-        i = int(i)
-        sendToAnki(f'{PDF_name}-{i:0{width}d}.jpg', PDF_text)
+        sendToAnki(f'{PDF_name}-{int(i):0{width}d}.jpg', PDF_text)
 
 print(f"Done! Duration = {time.process_time()}")
