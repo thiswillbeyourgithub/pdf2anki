@@ -18,11 +18,8 @@ This file is part of pdf2anki.
 
 """
 
-
-
 import time
 import subprocess
-import os
 import argparse
 import re
 import multiprocessing
@@ -34,35 +31,37 @@ import PyPDF2
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-u",
-        "--username",
-        help="home folder name",
-        dest="username",
-        metavar="USERNAME")
+                    "--username",
+                    help="home folder name",
+                    dest="username",
+                    metavar="USERNAME")
 parser.add_argument("-f",
-        "--PDF",
-        help="the pdf you want to add to anki", 
-        dest="PDF",
-        metavar="file.pdf")
+                    "--PDF",
+                    help="the pdf you want to add to anki",
+                    dest="PDF",
+                    metavar="file.pdf")
 args = parser.parse_args().__dict__
 
-if args['PDF'] is None :
+if args['PDF'] is None:
     print("No PDF were given\nExiting.")
     raise SystemExit()
 
 
-######### SETTINGS :
-picture_DPI             =  100    #default  is  200
-bw                      =  False  #store    as  black  and  white      or  not
-add_image               =  True   #default  is  True
+# SETTINGS :
+picture_DPI             =  100    # default  is  200
+bw                      =  False  # store    as  black  and  white      or  not
+add_image               =  True   # default  is  True
 unix                    =  True   # on  unix,  use  pdftotext  to  preserve  layout,  otherwise  use  PyPDF2  but  text  extraction  is  worse
 disable_multithreading  =  True
 
 anki_profile = "Main"
-ankiMediaFolder=f"/home/{args['username']}/.local/share/Anki2/{anki_profile}/collection.media/"
+ankiMediaFolder = f"/home/{args['username']}/.local/share/Anki2/" +\
+        "{anki_profile}/collection.media/"
 
 num_cores = max(multiprocessing.cpu_count()-1, 1)
-batch_size = 50 # for pdf2image
-######### 
+batch_size = 50  # for pdf2image
+#########
+
 
 def createBasicTemplate():
     r = requests.post('http://127.0.0.1:8765', json={
@@ -71,7 +70,7 @@ def createBasicTemplate():
         "params": {
             "modelName": "PDF_per_page",
             "inOrderFields": ["DocumentPage", "Text"],
-            "css":" .card {font-family: arial; font-size: 14px; text-align: left; color: black; background-color: white;}\n\
+            "css": " .card {font-family: arial; font-size: 14px; text-align: left; color: black; background-color: white;}\n\
                     .title {text-align : center !important; font-size : 30px} \n\
                     .col1 {width:50% ; float:left ; text-align:left}\n\
                     .col2 {width:50% ; float:right ; text-align:left}\n\
@@ -88,7 +87,7 @@ def createBasicTemplate():
             ]
         }
     })
-    #print(str(r.json())) # to debug
+    #print(str(r.json()))  # to debug
     print("Finished template creation!\n")
 
 
@@ -104,9 +103,9 @@ def createImportDeck():
 
 
 def sendToAnki(JPG_name, back):
-    if add_image ==  True :
+    if add_image is True:
         front = f'<img class="" src="{JPG_name}">'
-    else :
+    else:
         front = f"{JPG_name} (not embedded)"
 
     r = requests.post('http://127.0.0.1:8765', json={
@@ -118,7 +117,7 @@ def sendToAnki(JPG_name, back):
                 "modelName": "PDF_per_page",
                 "fields": {
                     "DocumentPage": front,
-                    "Text": back ,
+                    "Text": back,
                 },
                 "tags": [
                     "Imported_From_PDF"
@@ -127,6 +126,7 @@ def sendToAnki(JPG_name, back):
         }
     })
     tqdm.write(str(r.json()))
+
 
 print("Adding Template...")
 createBasicTemplate()
@@ -139,42 +139,47 @@ PDF_file = PyPDF2.PdfFileReader(open(args['PDF'], 'rb'))
 PDF_name = str(args['PDF'].split("/")[-1])
 if add_image is True:
     print(f"Extracting pages from {PDF_name}...\n")
+
     def JPG_name_gen():
         for i in range(len(PDF_file.pages)):
             yield f"{PDF_name}"
+
     def run_p2i(x, y):
-        pdf2image.convert_from_path( args['PDF'],
-                dpi            =  picture_DPI,
-                output_folder  =  ankiMediaFolder,
-                fmt            =  "jpg",
-                first_page     =  x,
-                last_page      =  y,
+        pdf2image.convert_from_path(args['PDF'],
+                dpi            = picture_DPI,
+                output_folder  = ankiMediaFolder,
+                fmt            = "jpg",
+                first_page     = x,
+                last_page      = y,
                 jpegopt={ "quality":      80,
                           "progressive":  True,
                           "optimize":     True },
-                thread_count  =  num_cores,
-                transparent   =  False,
-                single_file   =  False,
-                size          =  None,
-                grayscale     =  bw,
-                output_file   =  JPG_name_gen()   )
+                thread_count  = num_cores,
+                transparent   = False,
+                single_file   = False,
+                size          = None,
+                grayscale     = bw,
+                output_file   = JPG_name_gen())
 
-    if disable_multithreading == True:
+    if disable_multithreading is True:
         num_cores = 1
     length = len(PDF_file.pages)
 
     if length < batch_size:
-        x=1 ; y=length
+        x = 1
+        y = length
         run_p2i(x, y)
     else:
-        try :
-            x=1 ; y=batch_size ; z=0
+        try:
+            x = 1
+            y = batch_size
+            z = 0
             while y <= length+batch_size:
-                print(f"Currently at page #{z*batch_size}... {x} {y} {z} {length}")
-                #run_p2i(x, min(y, length))
+                print(f"Currently at page #{z*batch_size}/{length}...")
+                run_p2i(x, min(y, length))
                 x = y
                 y += batch_size
-                z+=1
+                z += 1
         except OSError as err:
             print(f"ERROR {err}")
             print("This usually happens to me because of multithreading over large files.")
@@ -185,22 +190,25 @@ if add_image is True:
 
 print("Extracting text...\n")
 
-if unix == True :
+if unix is True:
     print("Running on unix, using pdftotext to extract text (better layout preservation)\n")
-if unix == False:
+if unix is False:
     print("Not running on unix, using pypdf2 to extract text (worse layout preservation)\n")
 
 i = 0
 width = len(str(len(PDF_file.pages)))
 for page in tqdm(PDF_file.pages):
-        i+=1
-        if unix == False :
-            PDF_text = page.extractText()
-            PDF_text = re.sub(r"\n+","<br>", PDF_text) 
-            PDF_text = re.sub("<br>\s+<br>","<br>", PDF_text)
-        if unix == True :
-            PDF_text = subprocess.run(["pdftotext", "-f", str(i), "-l", str(i), "-layout","-nopgbrk","-enc","UTF-8",args['PDF'], "-"],stdout=subprocess.PIPE, encoding='utf-8')
-            PDF_text = PDF_text.stdout.replace("\n","<br>")
-        sendToAnki(f'{PDF_name}-{int(i):0{width}d}.jpg', PDF_text)
+    i += 1
+    if unix is False:
+        PDF_text = page.extractText()
+        PDF_text = re.sub(r"\n+", "<br>", PDF_text)
+        PDF_text = re.sub(r"<br>\s+<br>", "<br>", PDF_text)
+    if unix is True:
+        PDF_text = subprocess.run(["pdftotext", "-f", str(i), "-l",
+                                    str(i), "-layout", "-nopgbrk",
+                                    "-enc", "UTF-8", args['PDF'], "-"],
+                             stdout=subprocess.PIPE, encoding='utf-8')
+        PDF_text = PDF_text.stdout.replace("\n", "<br>")
+    sendToAnki(f'{PDF_name}-{int(i):0{width}d}.jpg', PDF_text)
 
 print(f"Done! Duration = {time.process_time()}")
