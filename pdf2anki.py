@@ -21,31 +21,48 @@ This file is part of pdf2anki.
 
 
 import time
-import requests
 import subprocess
 import os
-import PyPDF2
-import pdf2image
-from pathlib import Path
-from tqdm import tqdm
-
-from joblib import Parallel, delayed
+import argparse
+import re
 import multiprocessing
+
+import requests
+import pdf2image
+from tqdm import tqdm
+import PyPDF2
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-u",
+        "--username",
+        help="home folder name",
+        dest="username",
+        metavar="USERNAME")
+parser.add_argument("-f",
+        "--PDF",
+        help="the pdf you want to add to anki", 
+        dest="PDF",
+        metavar="file.pdf")
+args = parser.parse_args().__dict__
+
+if args['PDF'] is None :
+    print("No PDF were given\nExiting.")
+    raise SystemExit()
 
 
 ######### SETTINGS :
-picture_quality=300 #default is 300
-color_nb = "disabled" # default is "disabled", it's the number of colors in the picture
-store_picture = "yes" #default is yes
+picture_DPI             =  200    #default  is  200
+bw                      =  False  #store    as  black  and  white      or  not
+add_image               =  True   #default  is  True
+unix                    =  True   # on  unix,  use  pdftotext  to  preserve  layout,  otherwise  use  PyPDF2  but  text  extraction  is  worse
+disable_multithreading  =  False
 
-username = "FILLME"
-profile_name = "Main"
-PDF_dir=f"/home/{username}/Downloads/PDF/"
-ankiMediaFolder=f"/home/{username}/.local/share/Anki2/{profile_name}/collection.media/"
+anki_profile = "Main"
+ankiMediaFolder=f"/home/{args['username']}/.local/share/Anki2/{anki_profile}/collection.media/"
 
-num_cores = max(multiprocessing.cpu_count()-1, 1)
+num_cores = max(int(multiprocessing.cpu_count()/2), 1)
+batch_size = 50 # for pdf2image
 ######### 
-
 
 def createBasicTemplate():
     r = requests.post('http://127.0.0.1:8765', json={
@@ -87,6 +104,11 @@ def createImportDeck():
 
 
 def sendToAnki(JPG_name, back):
+    if add_image ==  True :
+        front = f'<img class="" src="{JPG_name}">'
+    else :
+        front = f"{JPG_name} (not embedded)"
+
     r = requests.post('http://127.0.0.1:8765', json={
         "action": "addNote",
         "version": 6,
@@ -95,7 +117,7 @@ def sendToAnki(JPG_name, back):
                 "deckName": "Imported from PDF",
                 "modelName": "PDF_per_page",
                 "fields": {
-                    "OnePage": str(''.join(['<img class="" src="', JPG_name,'">'])),
+                    "OnePage": front,
                     "Text": back ,
                 },
                 "tags": [
@@ -106,54 +128,79 @@ def sendToAnki(JPG_name, back):
     })
     tqdm.write(str(r.json()))
 
-def batch_convert(PDF_path):
-        " converts single page pdf to jpg and moves them to the media folder "
-        JPG_path = f"{ankiMediaFolder}{PDF_path[len(PDF_dir):]}.jpg"
-        os.system(f'convert \
-                -density {picture_quality} \
-                {color_arg} \
-                -background "#ffffff" \
-                -quiet\
-                {PDF_path} {JPG_path}')
-        return
-
 print("Adding Template...")
 createBasicTemplate()
 
 print("Adding destination Deck...")
 createImportDeck()
 
-paths = Path(PDF_dir).glob('./*.pdf')
-paths = sorted(list(paths)) #get a list instead of a generator
-#pdf_file = PdfFileReader(open(args.inputpdf, 'rb'))
-#for page in pdf_file.pages:
-#        PDF_text = page.extractText()
 
-if store_picture == "yes":
-    if color_nb == "disabled":
-        color_arg = ""
+PDF_file = PyPDF2.PdfFileReader(open(args['PDF'], 'rb'))
+PDF_name = str(args['PDF'].split("/")[-1])
+if add_image is True:
+    print(f"Extracting pages from {PDF_name}...\n")
+    def JPG_name_gen():
+        for i in range(len(PDF_file.pages)):
+            yield f"{PDF_name}"
+    def run_p2i(x, y):
+        pdf2image.convert_from_path( args['PDF'],
+                dpi            =  picture_DPI,
+                output_folder  =  ankiMediaFolder,
+                fmt            =  "jpg",
+                first_page     =  x,
+                last_page      =  y,
+                jpegopt={ "quality":      80,
+                          "progressive":  True,
+                          "optimize":     True },
+                thread_count  =  num_cores,
+                transparent   =  False,
+                single_file   =  False,
+                size          =  None,
+                grayscale     =  bw,
+                output_file   =  JPG_name_gen()   )
+
+    if disable_multithreading == True:
+        num_cores = 1
+    length = len(PDF_file.pages)
+
+    if length < batch_size:
+        x=1 ; y=length
+        run_p2i(x, y)
     else:
-        color_arg = f"-colors {color_nb}"
-    print(f"Batch converting images + moving them to the collection using {num_cores} cores...")
-    Parallel(n_jobs=num_cores)(delayed(batch_convert)(str(i)) for i in tqdm(paths))
-
-print("Extracting text...")
-for PDF_path in tqdm(paths):
-        "extracts text"
-        PDF_path = str(PDF_path)
-
-        # extract text of pdf
-        PDF_text = subprocess.run(["pdftotext", "-layout","-nopgbrk","-enc","UTF-8",PDF_path, "-"],stdout=subprocess.PIPE, encoding='utf-8')
-        PDF_text = str(PDF_text.stdout)
-        PDF_text = PDF_text.replace("\n","<br>") # tries to keep formatting in anki
-        #PDF_text = PDF_text.replace(" ","&nbsp;")
-
-        JPG_name = f"{PDF_path[len(PDF_dir):]}.jpg"
-        if store_picture == "yes" :
-            sendToAnki(JPG_name, PDF_text)
-        else :
-            sendToAnki(f"Picture not embedded : \n{JPG_name}", PDF_text)
+        try :
+            x=1 ; y=batch_size
+            while y < (length+batch_size+2): #just to make sure
+                run_p2i(x, y)
+                x = y 
+                y = min(length, y+batch_size)
+        except OSError as err:
+            print(f"ERROR {err}")
+            print("This usually happens to me because of multithreading over large files.")
+            print("Retry while setting disable_multithreading to True")
+            print("Exiting")
+            raise SystemExit()
 
 
+print("Extracting text...\n")
+
+if unix == True :
+    print("Running on unix, using pdftotext to extract text (better layout preservation)\n")
+if unix == False:
+    print("Not running on unix, using pypdf2 to extract text (worse layout preservation)\n")
+
+i = 0
+width = len(str(len(PDF_file.pages)))
+for page in tqdm(PDF_file.pages):
+        i+=1
+        if unix == False :
+            PDF_text = page.extractText()
+            PDF_text = re.sub(r"\n+","<br>", PDF_text) 
+            PDF_text = re.sub("<br>\s+<br>","<br>", PDF_text)
+        if unix == True :
+            i = str(i)
+            PDF_text = subprocess.run(["pdftotext", "-f", i, "-l", i, "-layout","-nopgbrk","-enc","UTF-8",args['PDF'], "-"],stdout=subprocess.PIPE, encoding='utf-8')
+            PDF_text = PDF_text.stdout.replace("\n","<br>")
+        i = int(i)
+        sendToAnki(f'{PDF_name}-{i:0{width}d}.jpg', PDF_text)
 
 print(f"Done! Duration = {time.process_time()}")
