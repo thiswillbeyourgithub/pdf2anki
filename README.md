@@ -1,5 +1,5 @@
 # pdf2anki
-*TLDR : load pdf into anki, page by page, with text included. It **doesn't** OCR text, it just copies the text from the pdf. If your PDF doesn't include text, check out [AnkiOCR](https://ankiweb.net/shared/info/450181164).*
+*TLDR : loads a pdf into anki, one page pere card, with image on top and text below. It **doesn't** actually OCR text, it just extracts it from the pdf. If your file doesn't contain text, you can still use [AnkiOCR](https://ankiweb.net/shared/info/450181164) afterwards.*
 
 
 ***READ THIS. Please make sure you understand that right now anki's servers are free to use but they were not designed for this kind of usage. PDFs like this can easily be order of magnitures larger than simple text based cards. If you use this script, please be reasonnable and use another anki profile, this way it will not be automatically synced with the servers. Thank you.***
@@ -12,9 +12,9 @@
 * Anki-connect addon is used to create anki cards that contains the single page + the text
 * you can then search pdfs pages using multiple words at the same time
 * picture :
-[pic](screenshot.jpg)
+![pic](screenshot.jpg)
 * preview screen :
-[pic](preview.jpg)
+![pic](preview.jpg)
 
 ## Guide
 * run `pip install -r requirements.txt`
