@@ -19,6 +19,8 @@ This file is part of pdf2anki.
 """
 
 import time
+start = time.time()
+
 import subprocess
 import argparse
 import re
@@ -48,7 +50,7 @@ if args['PDF'] is None:
 
 
 # SETTINGS :
-picture_DPI             =  100    # default  is  200
+picture_DPI             =  200    # default  is  200
 bw                      =  False  # store    as  black  and  white      or  not
 add_image               =  True   # default  is  True
 unix                    =  True   # on  unix,  use  pdftotext  to  preserve  layout,  otherwise  use  PyPDF2  but  text  extraction  is  worse
@@ -56,7 +58,7 @@ disable_multithreading  =  True
 
 anki_profile = "Main"
 ankiMediaFolder = f"/home/{args['username']}/.local/share/Anki2/" +\
-        "{anki_profile}/collection.media/"
+        f"{anki_profile}/collection.media/"
 
 num_cores = max(multiprocessing.cpu_count()-1, 1)
 batch_size = 50  # for pdf2image
@@ -211,4 +213,4 @@ for page in tqdm(PDF_file.pages):
         PDF_text = PDF_text.stdout.replace("\n", "<br>")
     sendToAnki(f'{PDF_name}-{int(i):0{width}d}.jpg', PDF_text)
 
-print(f"Done! Duration = {time.process_time()}")
+print(f"Done!\nDuration = {round(time.time() - start,1)}s")
