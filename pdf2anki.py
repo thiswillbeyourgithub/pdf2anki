@@ -34,12 +34,12 @@ import PyPDF2
 parser = argparse.ArgumentParser()
 parser.add_argument("-u",
                     "--username",
-                    help="home folder name",
+                    help="The home folder name as in /home/USER/anki_path",
                     dest="username",
                     metavar="USERNAME")
 parser.add_argument("-f",
                     "--PDF",
-                    help="the pdf you want to add to anki",
+                    help="Path to the pdf you want to add to anki",
                     dest="PDF",
                     metavar="file.pdf")
 args = parser.parse_args().__dict__
