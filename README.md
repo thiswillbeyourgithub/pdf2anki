@@ -27,7 +27,7 @@
 
 
 ## notes :
-* **why did I make this?** The idea was to make my PDF lessons searchable. I never found a way to look for a page in a pdf using several keywords at the same time. So I decided to import each page into anki and use it like that. 
+* **why did I make this?** The idea was to make my PDF lessons searchable. I never found a way to look for a page in a pdf using several keywords at the same time. So I decided to import each page into anki and use it like that.  **But now, I don't use it that much after I discovered [recoll](https://www.lesbonscomptes.com/recoll/). It's a desktop search engine with awesome features. I added scripts to github that allow Recoll to search inside my anki database, [check it out](https://github.com/thiswillbeyourgithub/IndexableAnki)!
 * I tested this on `python 3.9` and it works at least in anki 2.1.35. Don't hesitate to open an issue if this stops working after an anki upgrade.
 * If you want to use it but your PDF doesn't include text and is not written by hand, you will probably be interested in the addon [AnkiOCR](https://ankiweb.net/shared/info/450181164). Just run pdf2anki (having set `add_image` to `True`) on your PDF then use AnkiOCR on those new cards. You can also use AnkiOCR to increase your search capabilities as some pictures and diagrams could be in your PDF but without text.
 * please don't use this on super large pdf for no reason, or if you do : don't sync it, the creator of anki should not have to pay extra bandwidth for this not intended use so don't forget the "delete media" button. 
@@ -36,4 +36,4 @@
 
 
 ## TODO
-* NONE. All caught up!
+* support globbing of pdfs, looks very easy to do, just add a loop, WCGW
