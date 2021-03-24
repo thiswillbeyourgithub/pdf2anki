@@ -8,7 +8,7 @@
 * It allows to search a specific page or your pdf using anki's browser, so you can use several words or parts of words to find a specific page.
 
 ## how does it work ?
-* pdf2anki uses either the linux command `pdftotext` extract the text from each pdf page (better layout preservation) or the package `PyPDF2` (worse)
+* pdf2anki uses either the Linux command `pdftotext` extract the text from each pdf page (better layout preservation) or the package `PyPDF2` (worse)
 * Anki-connect addon is used to create anki cards that contains the single page + the text
 * you can then search pdfs pages using multiple words at the same time
 * picture :
@@ -18,12 +18,12 @@
 
 ## Guide
 * run `pip install -r requirements.txt`
-* *optional* on unix, make sure you have `pdftotext`
+* *optional* on UNIX, make sure you have `pdftotext`
 * make sure to have [anki connect](https://ankiweb.net/shared/info/2055492159)
 * make sure anki is running
 * edit the script settings to suit your needs
 * run `python3 ./pdf2anki.py --username USER --PDF=filepath`
-* if you have any issue, don't be afraid to tell me by openning an issue on github. Try to uncomment the debug line to output `r.json()`, it can help you figure it out on your own.
+* if you have any issue, don't be afraid to tell me by opening an issue on github. Try to uncomment the debug line to output `r.json()`, it can help you figure it out on your own.
 
 
 ## notes :
