@@ -69,7 +69,7 @@ batch_size = 50  # for pdf2image
 
 
 def createBasicTemplate():
-    r = requests.post('http://127.0.0.1:8765', json={
+    json = {
         "action": "createModel",
         "version": 6,
         "params": {
@@ -81,18 +81,17 @@ def createBasicTemplate():
                     .col2 {width:50% ; float:right ; text-align:left}\n\
                     .container {width:100% ;  display:table }\n",
             "cardTemplates": [
-                {
-                    "Front": "{{DocumentPage}}",
-                    "Back": '<div class="title"> Side by Side </div>\n\
-                            <div class = "container"> \n\
-                                    <div class="col1"><u><b>Repeated page :</u></b> <br><br> {{DocumentPage}} <br>##<br>{{DocumentPage}}</div>\n\
-                                    <div class="col2"><u><b>Text content :</u></b> <br><br> {{Text}} </div> \n\
-                            </div>'
-                }
-            ]
-        }
-    })
-    #print(str(r.json()))  # to debug
+                { "Front": "{{DocumentPage}}",
+                  "Back": '<div class="title"> Side by Side </div>\n\
+                        <div class = "container"> \n\
+                                <div class="col1"><u><b>Repeated page :</u></b> <br><br> {{DocumentPage}} <br>##<br>{{DocumentPage}}</div>\n\
+                                <div class="col2"><u><b>Text content :</u></b> <br><br> {{Text}} </div> \n\
+                        </div>' } ]
+                    }
+            }
+    r = requests.post('http://127.0.0.1:8765', json=json)
+    if debug is True:
+        print(str(r.json()))
     print("Finished template creation!\n")
 
 
