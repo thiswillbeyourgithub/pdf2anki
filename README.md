@@ -16,13 +16,15 @@
 * preview screen :
         ![pic](preview.jpg)
 
-## Guide
+## Guide / usage
 * run `pip install -r requirements.txt`
 * *optional* on UNIX, make sure you have `pdftotext`
 * make sure to have [anki connect](https://ankiweb.net/shared/info/2055492159)
 * make sure anki is running
 * edit the script settings to suit your needs
+* close any other anki window except the main window, otherwise the script gets slower
 * run `python3 ./pdf2anki.py --username USER --PDF=filepath`
+* *optionnal* add several pdf at the same time using the `find` UNIX command like so : `find . -iname "*pdf" | cut -c3- | xargs  -P 1 -I% /path/to/pdf2anki.py --username USER --PDF=%`
 * if you have any issue, don't be afraid to tell me by opening an issue on github. Try to uncomment the debug line to output `r.json()`, it can help you figure it out on your own.
 
 
@@ -36,4 +38,4 @@
 
 
 ## TODO
-* support globbing of pdfs, looks very easy to do, just add a loop, WCGW
+* ankiconnect supports adding several notes in a single command, this could greatly speedup the script
