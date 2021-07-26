@@ -18,8 +18,6 @@ This file is part of pdf2anki.
 
 """
 
-import time
-start = time.time()
 
 import subprocess
 import argparse
@@ -30,6 +28,9 @@ import requests
 import pdf2image
 from tqdm import tqdm
 import PyPDF2
+
+import time
+start = time.time()
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-u",
