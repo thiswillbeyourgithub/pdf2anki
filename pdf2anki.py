@@ -54,7 +54,7 @@ picture_DPI             =  200    # default  is  200
 bw                      =  False  # store    as  black  and  white      or  not
 add_image               =  True   # default  is  True
 unix                    =  True   # on  unix,  use  pdftotext  to  preserve  layout,  otherwise  use  PyPDF2  but  text  extraction  is  worse
-disable_multithreading  =  True
+disable_multithreading  =  True   # if set to False, can lead to a bug
 
 anki_profile = "Main"
 ankiMediaFolder = f"/home/{args['username']}/.local/share/Anki2/" +\
@@ -183,10 +183,15 @@ if add_image is True:
                 y += batch_size
                 z += 1
         except OSError as err:
+            print(50*"#")
+            print(50*"#")
             print(f"ERROR {err}")
             print("This usually happens to me because of multithreading over large files.")
             print("Retry while setting disable_multithreading to True")
-            print("Exiting")
+            print("Or just retry without changing anything, I know it's so weird")
+            print("Exiting.")
+            print(50*"#")
+            print(50*"#")
             raise SystemExit()
 
 
