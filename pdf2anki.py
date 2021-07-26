@@ -54,8 +54,10 @@ if args['PDF'] is None:
 picture_DPI             =  200    # default  is  200
 bw                      =  False  # store    as  black  and  white      or  not
 add_image               =  True   # default  is  True
-unix                    =  True   # on  unix,  use  pdftotext  to  preserve  layout,  otherwise  use  PyPDF2  but  text  extraction  is  worse
+unix                    =  True   # on  unix,  use  pdftotext  to  preserve 
+# layout,  otherwise  use  PyPDF2  but  text  extraction  is  worse
 disable_multithreading  =  True   # if set to False, can lead to a bug
+debug                   =  False
 
 anki_profile = "Main"
 ankiMediaFolder = f"/home/{args['username']}/.local/share/Anki2/" +\
@@ -187,9 +189,11 @@ if add_image is True:
             print(50*"#")
             print(50*"#")
             print(f"ERROR {err}")
-            print("This usually happens to me because of multithreading over large files.")
+            print("This usually happens to me because of multithreading over\
+ large files.")
             print("Retry while setting disable_multithreading to True")
-            print("Or just retry without changing anything, I know it's so weird")
+            print("Or just retry without changing anything, I know it's so\
+ weird")
             print("Exiting.")
             print(50*"#")
             print(50*"#")
@@ -199,9 +203,11 @@ if add_image is True:
 print("Extracting text...\n")
 
 if unix is True:
-    print("Running on unix, using pdftotext to extract text (better layout preservation)\n")
+    print("Running on unix, using pdftotext to extract text (better layout\
+ preservation)\n")
 if unix is False:
-    print("Not running on unix, using pypdf2 to extract text (worse layout preservation)\n")
+    print("Not running on unix, using pypdf2 to extract text (worse layout\
+ preservation)\n")
 
 i = 0
 width = len(str(len(PDF_file.pages)))
@@ -213,9 +219,9 @@ for page in tqdm(PDF_file.pages):
         PDF_text = re.sub(r"<br>\s+<br>", "<br>", PDF_text)
     if unix is True:
         PDF_text = subprocess.run(["pdftotext", "-f", str(i), "-l",
-                                    str(i), "-layout", "-nopgbrk",
-                                    "-enc", "UTF-8", args['PDF'], "-"],
-                             stdout=subprocess.PIPE, encoding='utf-8')
+                                   str(i), "-layout", "-nopgbrk",
+                                   "-enc", "UTF-8", args['PDF'], "-"],
+                                  stdout=subprocess.PIPE, encoding='utf-8')
         PDF_text = PDF_text.stdout.replace("\n", "<br>")
     sendToAnki(f'{PDF_name}-{int(i):0{width}d}.jpg', PDF_text)
 
