@@ -96,7 +96,7 @@ def createBasicTemplate():
 
 
 def createImportDeck():
-    r = requests.post('http://127.0.0.1:8765', json={
+    requests.post('http://127.0.0.1:8765', json={
         "action": "createDeck",
         "version": 6,
         "params": {
