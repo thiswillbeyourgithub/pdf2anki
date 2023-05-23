@@ -1,4 +1,4 @@
-requests==2.25.1
+requests==2.31.0
 tqdm==4.55.1
 PyPDF2==1.26.2
 pdf2image==1.14.0
